@@ -1,7 +1,22 @@
 # Hydra-101
 
 ### 1. How to add hydra config from terminal 
+```yaml
+# config.yaml
+# empty file
+```
+```python
+# main.py
+from omegaconf import DictConfig, OmegaConf
+import hydra
 
+@hydra.main(config_path="configs", config_name="config")
+def main(config:DictConfig) -> None:
+    print(OmegaConf.to_yaml(config))
+
+if __name__ == "__main__":
+    main()
+```
 ```bash 56
 python main.py +training.batch_size=32 +training.epochs=20 +training.lr=5e-5
 ```
