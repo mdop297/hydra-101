@@ -333,6 +333,83 @@ python main.py experiments.optim=some_optimizer -c job
 python main.py -c job --package experiments
 ```
 ### 11. Instantiate: Create python objects from configurations
+```text
+working files:
+    - hydra_instantiate.py
+    - configs/instantiate-config.yaml
+```
+To create object from configs using `hydra.utils.instantiate` function, we need to specify `_target_` value, the destination class
+```yaml
+#configs/instantiate-config.yaml
+my_class: 
+  _target_: hydra_instantiate.MyClass
+  name: Minh from hydra
+
+optimizer:
+  _target_: torch.optim.Adam
+  _partial_: true #view more in below
+  lr: 0.001
+  betas: [0.9, 0.999]
+  eps: 1e-6
+  weight_decay: 0
+  amsgrad: false
+```
+```python
+#hydra_instantiate.py
+import hydra
+from omegaconf import DictConfig
+from hydra.utils import instantiate
+import torch
+
+class MyClass:
+    def __init__(self, name: str) -> None:
+        self.name = name
+
+    def say_hello(self) -> None:
+        print(f"Hello {self.name}")
 
 
+@hydra.main(config_path="configs", config_name="instantiate-config", version_base=None)
+def main(config: DictConfig) -> None:
+    my_class = MyClass(name="Minh")
+    my_class.say_hello()
+
+    my_class_hydra = instantiate(config.my_class)
+    my_class_hydra.say_hello()
+
+    partial_optimizer = instantiate(config.optimizer)
+    print(partial_optimizer)
+    parameters = torch.nn.Parameter(torch.randn(10, 10))
+    optimizer = partial_optimizer([parameters])
+    print(optimizer)
+
+if __name__ == "__main__":
+    main()
+
+```
+- output
+```bash
+# my_class
+Hello Minh
+# my_class_hydra
+Hello Minh from hydra
+# partial_optimizer
+functools.partial(<class 'torch.optim.adam.Adam'>, lr=0.001, betas=[0.9, 0.999], eps=1e-06, weight_decay=0, amsgrad=False)
+# optimizer
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: [0.9, 0.999]
+    capturable: False
+    differentiable: False
+    eps: 1e-06
+    foreach: None
+    fused: None
+    lr: 0.001
+    maximize: False
+    weight_decay: 0
+)
+```
+#### Use case of `_partial_`
+When we have some parameters of config values that can not pass into config file like: parameter of ML model. Hydra will return a partial function (an object which is passed some parameters into it, and we need to pass some mandatory value to make it a fully instance or function).
 
