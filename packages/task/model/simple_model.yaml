@@ -1,0 +1,6 @@
+defaults: 
+  - backbone: resnet18
+  - adapter: mnist_classification_resnet18
+  - head: identity_head
+
+some_model_var: model_value

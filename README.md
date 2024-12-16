@@ -413,3 +413,44 @@ Parameter Group 0
 #### Use case of `_partial_`
 When we have some parameters of config values that can not pass into config file like: parameter of ML model. Hydra will return a partial function (an object which is passed some parameters into it, and we need to pass some mandatory value to make it a fully instance or function).
 
+### 12. Packages (@)
+```text
+packages
+├── config.yaml
+└── task
+    ├── mnist_classification.yaml
+    └── model
+        ├── adapter
+        │   └── mnist_classification_resnet18.yaml
+        ├── backbone
+        │   └── resnet18.yaml
+        ├── head
+        │   └── identity_head.yaml
+        └── simple_model.yaml
+```
+Working files
+```
+- packages directory
+- packages.py
+```
+```yaml
+#syntax: real_task_name@overriden_name: config_name (name of the .yaml file)
+defaults:
+  - task: mnist_classification
+  - task@other_task: mnist_classification
+  # another way
+  - /task/model/simple_model@my_model
+```
+```python
+import hydra
+from omegaconf import DictConfig, OmegaConf
+
+@hydra.main(config_path="./packages", config_name='config', version_base=None)
+def main(config=DictConfig) -> None:
+    print(OmegaConf.to_yaml(config))
+
+if __name__ == "__main__":
+    main() 
+```
+
+### 13. Small project

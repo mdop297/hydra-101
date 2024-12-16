@@ -1,0 +1,6 @@
+defaults:
+  - task: mnist_classification
+  - task@other_task: mnist_classification
+  - /task/model/simple_model@my_model
+
+
