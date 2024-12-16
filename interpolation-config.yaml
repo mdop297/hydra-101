@@ -1,0 +1,7 @@
+server: 
+    host: localhost
+    port: 80
+client: 
+    url: http://${server.host}:${server.port}
+    # value in current level:
+    description: Client of ${.url}

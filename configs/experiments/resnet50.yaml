@@ -1,0 +1,4 @@
+model: resnet50
+optim: adam
+lr: 5e-5
+lr_scheduler: MultiStepLR

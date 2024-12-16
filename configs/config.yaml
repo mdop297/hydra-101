@@ -1,0 +1,8 @@
+defaults:
+  - experiments: resnet18
+  - loss_function: softmax
+  - config-to-merge
+  - _self_
+
+experiments:
+    optim: SGD
