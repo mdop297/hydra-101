@@ -1,0 +1,8 @@
+experiments:
+  model: resnet18
+  optim: SGD
+  lr: 5.0e-05
+  lr_scheduler: MultiStepLR
+loss_function:
+  name: softmax
+somekey: some value

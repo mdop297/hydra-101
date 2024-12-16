@@ -3,6 +3,7 @@ defaults:
   - loss_function: softmax
   - config-to-merge
   - _self_
+  - override hydra/job_logging: disabled
 
 experiments:
     optim: SGD

@@ -252,3 +252,87 @@ if __name__ == "__main__":
 # CURRENT WORKING DIRECTORY:  /home/nhatminh/Workspace/mlops/hands-on-projects/cyberbullying-detection/02-hydra-101/outputs/2024-12-16/14-36-10
 ```
 ### 9. Logging
+```python
+# main.py
+from omegaconf import DictConfig, OmegaConf
+import hydra, os, logging
+from hydra.utils import get_original_cwd, to_absolute_path
+
+logger = logging.getLogger(__name__)
+
+@hydra.main(config_path="configs", config_name="config")
+def main(config:DictConfig) -> None:
+    print(OmegaConf.to_yaml(config, resolve=True))
+    logger.info("info message")
+    logger.debug("debug message")
+
+if __name__ == "__main__":
+    main()
+```
+- info level
+```bash
+python main.py
+```
+- debug level
+```python
+python main.py hydra.verbose=true
+```
+base on the command, we can add the hydra.verbose config in config.yaml file as below:
+```yaml
+defaults:
+  - experiments: resnet18
+  - loss_function: softmax
+  - config-to-merge
+  - _self_
+
+experiments:
+    optim: SGD
+
+hydra:
+  verbose: true
+```
+#### Disable the hydra logging
+- remove `hydra.verbose: true`
+```yaml
+#config.yaml
+defaults:
+  - experiments: resnet18
+  - loss_function: softmax
+  - config-to-merge
+  - _self_
+  - override hydra/job_logging: disabled
+
+experiments:
+    optim: SGD
+```
+### 10. Debugging hydra config
+- Actually, we don't need to print out our config to check it. We can simply run these commands
+#### With `user` config
+```bash
+python main.py -c job
+```
+Alternative
+```bash
+python main.py --cfg job
+```
+#### With `hydra` config
+```bash
+python main.py --cfg hydra
+```
+#### Both of `user` configs and `hydra` configs
+```bash
+python main.py -c all
+```
+#### Combine override with debugging configs
+```bash
+python main.py experiments.optim=some_optimizer -c job
+```
+#### Debugging configs in packages
+- This is useful when we have a large config file
+```bash
+python main.py -c job --package experiments
+```
+### 11. Instantiate: Create python objects from configurations
+
+
+

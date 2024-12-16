@@ -1,16 +1,15 @@
 # main.py
 from omegaconf import DictConfig, OmegaConf
-import hydra
-import os
+import hydra, os, logging
 from hydra.utils import get_original_cwd, to_absolute_path
 
+logger = logging.getLogger(__name__)
 
-@hydra.main(config_path="configs", config_name="config")
+@hydra.main(config_path="configs", config_name="config", version_base=None)
 def main(config:DictConfig) -> None:
-    print(OmegaConf.to_yaml(config, resolve=True))
-    print("CURRENT WORKING DIRECTORY: ", os.getcwd())
-    print("ORIGINAL WORKING DIR: ", get_original_cwd())
-    print("TO ABSOLUTE PATH('some_file.txt')", to_absolute_path("some_file.txt"))
+    # print(OmegaConf.to_yaml(config, resolve=True))
+    logger.info("info message")
+    # logger.debug("debug message")
 
 if __name__ == "__main__":
     main()
