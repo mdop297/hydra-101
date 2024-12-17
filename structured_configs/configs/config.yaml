@@ -1,0 +1,4 @@
+defaults:
+  - config_schema
+  - experiment: resnet50
+  - _self_

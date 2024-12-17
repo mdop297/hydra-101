@@ -1,0 +1,7 @@
+
+defaults:
+  - resnet18_schema
+
+model: resnet18
+batch_size: 32
+nrof_epochs: 30
